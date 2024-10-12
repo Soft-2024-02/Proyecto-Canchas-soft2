@@ -1,0 +1,80 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer {
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.card {
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.custom-card {
+    background-color: #f5f7f8;
+    padding: 20px;
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.custom-sidebar .list-group-item {
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.custom-sidebar .list-group-item a {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #000;
+    border-left: 4px solid transparent;
+    transition: background-color 0.3s, border-left-color 0.3s;
+}
+
+.custom-sidebar .list-group-item a:hover {
+    background-color: #f8f9fa;
+    border-left-color: #007bff;
+}
+
+.custom-sidebar .list-group-item a.active {
+    background-color: #007bff;
+    border-left-color: #007bff;
+    font-weight: bold;
+}
+
+.custom-sidebar .list-group-item a {
+    display: block;
+    padding: 10px;
+    color: #000;
+    text-decoration: none;
+}
+
+.custom-sidebar .list-group-item a:hover,
+.custom-sidebar .list-group-item a.active {
+    background-color: #e9ecef;
+    border-left: 3px solid #007bff;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
