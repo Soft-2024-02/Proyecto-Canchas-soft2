@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-dark py-3" style="background-color: #2C3E50;">
+    <div class="container-fluid ms-3">
+        <a class="navbar-brand me-5 display-1 text-uppercase text-white" 
+        href="{% url 'inicio' %}" style="font-size: 1.75rem; font-weight: 900; letter-spacing: 2px; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);">
+            <b>Reserva tu Cancha</b>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item mx-3">
+                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'inicio' %}">
+                            <b>Inicio</b>
+                        </a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'perfil' %}">
+                            <b>Mi Perfil</b>
+                        </a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'perfil' %}">
+                            <b>Mis Reservas</b>
+                        </a>
+                    </li>
+                    {% if request.user.is_responsible %}
+                        <li class="nav-item mx-3">
+                            <a class="nav-link display-1 text-uppercase text-white" href="{% url 'perfil' %}">
+                                <b>Mis Canchas</b>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item mx-3">
+                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signout' %}">
+                            <b>Cerrar Sesión</b>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item mx-3">
+                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signup' %}">
+                            <b>Registrarse</b>
+                        </a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signin' %}">
+                            <b>Iniciar Sesión</b>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
