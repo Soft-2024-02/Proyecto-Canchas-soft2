@@ -1,0 +1,30 @@
+<form method="POST" action="{% url 'actualizar_perfil' %}">
+    {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="dni" class="form-label" style="font-weight: bold; color: #F1C40F;">DNI:</label>
+            <input type="text" name="dni" id="dni" value="{{ user.dni }}" class="form-control shadow-sm" maxlength="8" required>
+        </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label" style="font-weight: bold; color: #F1C40F;">Correo:</label>
+            <input type="email" name="email" id="email" value="{{ user.email }}" class="form-control shadow-sm" required>
+        </div>
+        <div class="col-md-6">
+            <label for="nombre" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" value="{{ user.nombre }}" class="form-control shadow-sm" required>
+        </div>
+        <div class="col-md-6">
+            <label for="apellidos" class="form-label" style="font-weight: bold; color: #F1C40F;">Apellidos:</label>
+            <input type="text" name="apellidos" id="apellidos" value="{{ user.apellidos }}" class="form-control shadow-sm" required>
+        </div>
+        <div class="col-md-6">
+            <label for="celular" class="form-label" style="font-weight: bold; color: #F1C40F;">Celular:</label>
+            <input type="text" name="celular" id="celular" value="{{ user.celular }}" class="form-control shadow-sm" maxlength="9" required>
+        </div>
+    </div>
+    <!-- Botones de Acción -->
+    <div class="text-end mt-5">
+        <a href="{% url 'perfil' user.id user.slug %}" class="btn px-4 py-2 shadow-sm" style="background-color: #2C3E50; color: #fff; font-weight: bold;">Cancelar</a>
+        <button type="submit" class="btn px-4 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Guardar Cambios</button>
+    </div>
+</form>

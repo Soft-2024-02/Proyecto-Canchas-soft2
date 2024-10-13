@@ -1,0 +1,19 @@
+<div class="col-md-3">
+    <div class="card shadow-lg p-4" style="border-radius: 15px; background-color: #f5f5f5;">
+        <div class="text-center">
+            <a class="d-flex justify-content-center align-items-center overflow-hidden rounded-circle mx-auto mb-3"
+                style="width: 150px; height: 150px; background-size: cover; background-position: center; background-image: url({% if user.imagen %} {{ user.imagen.url }} {% else %} 'https://imgur.com/CuXg45K.jpg' {% endif %});"
+                aria-label="Imagen de perfil"></a>
+            <h4 style="font-weight: bold; color: #F1C40F;">{{ user.nombre }} {{ user.apellidos }}</h4>
+            {% if user.is_staff %}
+                <span class="badge bg-danger">Administrador</span>
+            {% else %}
+                {% if responsable %}
+                    <span class="badge bg-success">Responsable</span>
+                {% else %}
+                    <span class="badge bg-primary">Cliente</span>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<main class="container py-5">
+    <div class="d-flex flex-column align-items-center">
+        <div class="card shadow-lg" style="max-width: 525px; width: 100%; background-color: #f5f5f5; border-radius: 15px; padding: 40px;">
+            <h1 class="text-center mb-4" style="color: #4CAF50; font-size: 2rem; font-weight: bold; letter-spacing: 1px;">Iniciar Sesión</h1>
+            <p class="pb-3 text-center" style="color: #2C3E50;">¿Aún no tienes una cuenta? &nbsp; <a href="/signup" style="color: #F1C40F; font-weight: bold;">Regístrate aquí</a></p>
+            <form method="POST" action="{% url 'signin' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="font-weight: bold; color: #F1C40F;">Correo Electrónico:</label>
+                    <input type="email" name="email" id="email" class="form-control form-control-lg shadow-sm {% if error %}is-invalid{% endif %}" maxlength="255" placeholder="Ingresar correo" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label" style="font-weight: bold; color: #F1C40F;">Contraseña:</label>
+                    <input type="password" name="password" id="password" class="form-control form-control-lg shadow-sm {% if error %}is-invalid{% endif %}" placeholder="Ingresar contraseña" required>
+                </div>
+                {% if error %}
+                    <p class="text-center mt-3" style="color: red;">{{ error }}</p>
+                {% endif %}
+                <div class="text-center py-3">
+                    <button type="submit" class="btn btn-lg w-100 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+z

@@ -1,52 +1,106 @@
 <nav class="navbar navbar-expand-lg navbar-dark py-3" style="background-color: #2C3E50;">
-    <div class="container-fluid ms-3">
+    <div class="container-fluid ms-3 d-flex align-items-center justify-content-between">
         <a class="navbar-brand me-5 display-1 text-uppercase text-white" 
-        href="{% url 'inicio' %}" style="font-size: 1.75rem; font-weight: 900; letter-spacing: 2px; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);">
+            href="{% url 'inicio' %}" 
+            style="font-size: 1.75rem; font-weight: 900; letter-spacing: 2px; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);">
             <b>Reserva tu Cancha</b>
         </a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                {% if request.user.is_authenticated %}
-                    <li class="nav-item mx-3">
-                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'inicio' %}">
-                            <b>Inicio</b>
-                        </a>
+        <ul class="navbar-nav ms-auto d-flex align-items-center">
+            <li class="nav-item mx-3">
+                <a class="nav-link display-1 text-uppercase text-white" href="{% url 'inicio' %}">
+                    <b>Inicio</b>
+                </a>
+            </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item dropdown mx-3 user-dropdown position-relative">
+                <a class="nav-link d-flex align-items-center text-white" href="#" id="userDropdown"
+                    role="button">
+                    <img src="{% if request.user.imagen %} {{ request.user.imagen.url }} {% else %} https://imgur.com/CuXg45K.jpg {% endif %}" 
+                        alt="Perfil" class="rounded-circle me-2" 
+                        style="width: 40px; height: 40px; object-fit: cover;">
+                    <span class="text-uppercase" style="font-weight: 700;">{{ request.user.nombre }}</span>
+                </a>
+                <!-- Dropdown menú -->
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'perfil' request.user.id request.user.slug %}">Mi Perfil</a>
                     </li>
-                    <li class="nav-item mx-3">
-                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'perfil' %}">
-                            <b>Mi Perfil</b>
-                        </a>
-                    </li>
-                    <li class="nav-item mx-3">
-                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'perfil' %}">
-                            <b>Mis Reservas</b>
-                        </a>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'inicio' %}">Mis Reservas</a>
                     </li>
                     {% if request.user.is_responsible %}
-                        <li class="nav-item mx-3">
-                            <a class="nav-link display-1 text-uppercase text-white" href="{% url 'perfil' %}">
-                                <b>Mis Canchas</b>
-                            </a>
-                        </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'inicio' %}">Mis Canchas</a>
+                    </li>
                     {% endif %}
-                    <li class="nav-item mx-3">
-                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signout' %}">
-                            <b>Cerrar Sesión</b>
-                        </a>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{% url 'signout' %}">Cerrar Sesión</a>
                     </li>
-                {% else %}
-                    <li class="nav-item mx-3">
-                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signup' %}">
-                            <b>Registrarse</b>
-                        </a>
-                    </li>
-                    <li class="nav-item mx-3">
-                        <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signin' %}">
-                            <b>Iniciar Sesión</b>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+                </ul>
+            </li>
+            {% else %}
+            <li class="nav-item mx-3">
+                <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signup' %}">
+                    <b>Registrarse</b>
+                </a>
+            </li>
+            <li class="nav-item mx-3">
+                <a class="nav-link display-1 text-uppercase text-white" href="{% url 'signin' %}">
+                    <b>Iniciar Sesión</b>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
     </div>
 </nav>
+
+<style>
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+    }
+    .dropdown-menu {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: visibility 0s, opacity 0.3s ease, transform 0.3s ease;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .user-dropdown.show .dropdown-menu {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0s;
+    }
+    .dropdown-item {
+        font-weight: bold;
+        color: #2C3E50;
+    }
+    .dropdown-item:hover {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+    .dropdown-divider {
+        margin: 0;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdown = document.querySelector('.user-dropdown');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+        dropdown.addEventListener('mouseenter', function () {
+            dropdown.classList.add('show');
+        });
+        dropdownMenu.addEventListener('mouseenter', function () {
+            dropdown.classList.add('show');
+        });
+        dropdown.addEventListener('mouseleave', function () {
+            dropdown.classList.remove('show');
+        });
+    });
+</script>

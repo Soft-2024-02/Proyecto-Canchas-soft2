@@ -1,0 +1,41 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<main class="container-fluid p-0">
+    <!-- Banner de la página -->
+    {% include "usuario/inicio/banner.html" %}
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <!-- Sección de búsqueda -->
+        {% include "usuario/inicio/busqueda.html" %}
+        <!-- Sección de canchas registradas -->
+        <div class="row">
+            <div class="col-lg-12 text-center mb-4">
+                <h2 class="display-5" style="color: #4CAF50;">¡Descubre Nuestras Canchas de Futbol Registradas!</h2>
+            </div>
+        </div>
+        <!-- Lista de canchas -->
+        <div class="row g-3">
+            {% if canchas %}
+                {% for cancha in canchas %}
+                    {% include "usuario/inicio/bloque_cancha.html" %}
+                {% endfor %}
+            {% else %}
+                <div class="col-lg-12 text-center">
+                    <p class="fs-4 text-muted">Aún no existen canchas registradas.</p>
+                </div>
+            {% endif %}
+        </div>
+        <!-- Sección para los botones de registro e inicio de sesión -->
+        {% if not request.user.is_authenticated %}
+            {% include "usuario/inicio/signin_signup.html" %}
+        {% endif %}
+        <!-- Sección registro de cancha -->
+        {% if request.user.is_authenticated %}
+            {% include "usuario/inicio/registro_cancha.html" %}
+        {% endif %}
+    </div>
+</main>
+
+{% endblock %}

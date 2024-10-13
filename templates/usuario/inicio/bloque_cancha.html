@@ -1,0 +1,44 @@
+{% load static %}
+
+<style>
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    a.card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
+
+<div class="col-md-4">
+    <a href="" class="card-link">
+        <div class="card shadow-lg">
+            <img src="{% static 'images/cancha-banner.jpg' %}" class="card-img-top" alt="Cancha {{ cancha.nombre }}">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-3" style="font-weight: 900; letter-spacing: 2px; color: #4CAF50;">{{ cancha.nombre }}</h5>
+                <p class="card-text">
+                    <strong>Responsable:</strong> 
+                    <a href="{% url 'perfil' cancha.responsable.id cancha.responsable.slug %}" 
+                        class="text-decoration-none fw text-primary d-inline-flex align-items-center">
+                        <span class="me-1" style="color: #4CAF50;">{{ cancha.responsable }}</span>
+                        <i class="bi bi-person-circle" style="color: #4CAF50;"></i>
+                    </a>
+                </p>
+                {% with direccion=cancha.direcciones.first %}
+                    <p class="card-text">
+                        <strong>Dirección:</strong>
+                            {{ direccion.get_tipo_calle_display }} {{ direccion.nombre_calle }} 
+                            {{ direccion.numero_calle }} - {{ direccion.get_distrito_display }}
+                    </p>
+                {% endwith %}
+                <p class="text-warning mb-0">
+                    <strong>Disponible:</strong> {{ cancha.disponibilidad|yesno:"Sí,No" }}
+                </p>
+            </div>
+        </div>
+    </a>
+</div>

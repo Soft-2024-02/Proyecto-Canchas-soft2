@@ -1,0 +1,15 @@
+<form method="POST" action="{% url 'eliminar_cuenta' %}">
+    {% csrf_token %}
+    <div class="alert alert-warning" role="alert">
+        <i class="ai-triangle-alert fs-xl me-2"></i>
+        <strong>Advertencia:</strong> Al eliminar tu cuenta, se perderán todos tus datos y no podrás recuperarlos. 
+        <br>¿Estás seguro de que deseas continuar?
+    </div>
+    <div class="form-check mb-4">
+        <input type="checkbox" class="form-check-input" id="confirm" required>
+        <label for="confirm" class="form-check-label">Sí, deseo eliminar mi cuenta.</label>
+    </div>
+    <div class="text-end">
+        <button type="submit" class="btn btn-danger px-4 py-2 shadow-sm" style="color: #fff; font-weight: bold;">Eliminar Cuenta</button>
+    </div>
+</form>

@@ -1,0 +1,91 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4" style="color: #4CAF50; font-weight: bold;">Registrar Nueva Cancha</h2>
+                    <!-- Formulario para registrar cancha -->
+                    <form method="POST" action="{% url 'registro_cancha' %}">
+                        {% csrf_token %}
+                        <!-- Nombre de la cancha -->
+                        <div class="mb-4">
+                            <label for="nombre" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre de la Cancha:</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control form-control-lg shadow-sm" maxlength="100" placeholder="Nombre de la cancha" required>
+                        </div>
+                        <!-- Información de la dirección -->
+                        <h4 class="text-center mt-4 mb-3" style="color: #2C3E50; font-weight: bold;">Dirección</h4>
+                        <!-- Tipo de calle -->
+                        <div class="mb-4">
+                            <label for="tipo_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Tipo de Calle:</label>
+                            <select id="tipo_calle" name="tipo_calle" class="form-select form-select-lg shadow-sm" required>
+                                <option value="avenida">Avenida</option>
+                                <option value="calle">Calle</option>
+                                <option value="jiron">Jirón</option>
+                                <option value="pasaje">Pasaje</option>
+                            </select>
+                        </div>
+                        <!-- Nombre de la calle -->
+                        <div class="mb-4">
+                            <label for="nombre_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre de la Calle:</label>
+                            <input type="text" id="nombre_calle" name="nombre_calle" class="form-control form-control-lg shadow-sm" maxlength="50" placeholder="Nombre de la calle" required>
+                        </div>
+                        <!-- Número de la calle -->
+                        <div class="mb-4">
+                            <label for="numero_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Número de la Calle:</label>
+                            <input type="text" id="numero_calle" name="numero_calle" class="form-control form-control-lg shadow-sm" maxlength="5" placeholder="Número de la calle" pattern="\d+" title="Solo se permiten números" required>
+                        </div>
+                        <!-- Distrito -->
+                        <div class="mb-4">
+                            <label for="distrito" class="form-label" style="font-weight: bold; color: #F1C40F;">Distrito:</label>
+                            <select id="distrito" name="distrito" class="form-select form-select-lg shadow-sm" required>
+                                <option value="barranco">Barranco</option>
+                                <option value="callao">Callao</option>
+                                <option value="cercado_de_lima">Cercado de Lima</option>
+                                <option value="chorrillos">Chorrillos</option>
+                                <option value="jesus_maria">Jesús María</option>
+                                <option value="la_molina">La Molina</option>
+                                <option value="lince">Lince</option>
+                                <option value="los_olivos">Los Olivos</option>
+                                <option value="magdalena">Magdalena</option>
+                                <option value="miraflores">Miraflores</option>
+                                <option value="pueblo_libre">Pueblo Libre</option>
+                                <option value="rimac">Rímac</option>
+                                <option value="san_borja">San Borja</option>
+                                <option value="san_isidro">San Isidro</option>
+                                <option value="san_juan_de_lurigancho">San Juan de Lurigancho</option>
+                                <option value="san_juan_de_miraflores">San Juan de Miraflores</option>
+                                <option value="san_miguel">San Miguel</option>
+                                <option value="santiago_de_surco">Santiago de Surco</option>
+                                <option value="surquillo">Surquillo</option>
+                                <option value="ventanilla">Ventanilla</option>
+                                <option value="villa_maria_del_triunfo">Villa María del Triunfo</option>
+                            </select>
+                        </div>
+                        <!-- Referencia (opcional) -->
+                        <div class="mb-4">
+                            <label for="referencia" class="form-label" style="font-weight: bold; color: #F1C40F;">Referencia (Opcional):</label>
+                            <input type="text" id="referencia" name="referencia" class="form-control form-control-lg shadow-sm" maxlength="50" placeholder="Ejemplo: Frente a la tienda XYZ">
+                        </div>
+                        <!-- Botones de acción -->
+                        <div class="text-center mt-5">
+                            <a href="{% url 'inicio' %}" class="btn btn-secondary px-4 py-2 shadow-sm me-2" style="background-color: #2C3E50; color: #fff; font-weight: bold;">Cancelar</a>
+                            <button type="submit" class="btn px-4 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Registrar Cancha</button>
+                        </div>
+                        <!-- Mostrar error si existe -->
+                        {% if error %}
+                            <div class="alert alert-danger mt-4 text-center" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

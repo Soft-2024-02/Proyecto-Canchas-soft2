@@ -1,0 +1,19 @@
+<form method="POST" action="{% url 'cambiar_imagen' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+            <img id="profileImagePreview" src="{% if user.imagen %}{{ user.imagen.url }}{% else %}https://imgur.com/CuXg45K.jpg{% endif %}" 
+                alt="Imagen de perfil" class="rounded-circle shadow-sm" 
+                style="width: 150px; height: 150px; object-fit: cover;">
+        </div>
+        <div class="ms-3">
+            <label for="profileImageInput" class="btn btn-outline-primary">Subir nueva imagen</label>
+            <input type="file" id="profileImageInput" name="imagen" accept="image/*" style="display: none;" onchange="previewImage(event)">
+            <button type="button" class="btn btn-outline-danger" onclick="resetImage()">Quitar Imagen</button>
+        </div>
+    </div>
+    <div class="text-end mt-4">
+        <a href="{% url 'perfil' user.id user.slug %}" class="btn px-4 py-2 shadow-sm" style="background-color: #2C3E50; color: #fff; font-weight: bold;">Cancelar</a>
+        <button type="submit" class="btn px-4 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Actualizar Imagen</button>
+    </div>
+</form>
