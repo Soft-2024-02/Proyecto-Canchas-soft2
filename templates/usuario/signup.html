@@ -48,9 +48,6 @@
                         <p class="text-center mt-1" style="color: red;">Número de celular inválido o ya existente</p>
                     {% endif %}
                 </div>
-                {% if error %}
-                    <p class="text-center mt-3" style="color: red;">{{ error }}</p>
-                {% endif %}
                 <!-- Botón de registro -->
                 <div class="text-center py-3">
                     <button class="btn btn-lg w-100 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Registrarse</button>
@@ -59,5 +56,7 @@
         </div>
     </div>
 </main>
+
+{% include "base/message.html" %}
 
 {% endblock %}

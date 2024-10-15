@@ -15,7 +15,7 @@
 </style>
 
 <div class="col-md-4">
-    <a href="" class="card-link">
+    <a href="{% url 'detalle_cancha' cancha.id cancha.slug %}" class="card-link">
         <div class="card shadow-lg">
             <img src="{% static 'images/cancha-banner.jpg' %}" class="card-img-top" alt="Cancha {{ cancha.nombre }}">
             <div class="card-body">

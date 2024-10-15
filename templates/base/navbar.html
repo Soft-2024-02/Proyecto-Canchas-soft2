@@ -1,3 +1,37 @@
+<style>
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+    }
+    .dropdown-menu {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: visibility 0s, opacity 0.3s ease, transform 0.3s ease;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .user-dropdown.show .dropdown-menu {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0s;
+    }
+    .dropdown-item {
+        font-weight: bold;
+        color: #2C3E50;
+    }
+    .dropdown-item:hover {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+    .dropdown-divider {
+        margin: 0;
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark py-3" style="background-color: #2C3E50;">
     <div class="container-fluid ms-3 d-flex align-items-center justify-content-between">
         <a class="navbar-brand me-5 display-1 text-uppercase text-white" 
@@ -54,53 +88,3 @@
         </ul>
     </div>
 </nav>
-
-<style>
-    .navbar-nav {
-        display: flex;
-        align-items: center;
-    }
-    .dropdown-menu {
-        display: block;
-        visibility: hidden;
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: visibility 0s, opacity 0.3s ease, transform 0.3s ease;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-    .user-dropdown.show .dropdown-menu {
-        visibility: visible;
-        opacity: 1;
-        transform: translateY(0);
-        transition-delay: 0s;
-    }
-    .dropdown-item {
-        font-weight: bold;
-        color: #2C3E50;
-    }
-    .dropdown-item:hover {
-        background-color: #4CAF50;
-        color: #fff;
-    }
-    .dropdown-divider {
-        margin: 0;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dropdown = document.querySelector('.user-dropdown');
-        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-        dropdown.addEventListener('mouseenter', function () {
-            dropdown.classList.add('show');
-        });
-        dropdownMenu.addEventListener('mouseenter', function () {
-            dropdown.classList.add('show');
-        });
-        dropdown.addEventListener('mouseleave', function () {
-            dropdown.classList.remove('show');
-        });
-    });
-</script>

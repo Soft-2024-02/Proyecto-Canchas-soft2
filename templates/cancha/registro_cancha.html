@@ -8,6 +8,7 @@
             <div class="card shadow-lg">
                 <div class="card-body p-5">
                     <h2 class="text-center mb-4" style="color: #4CAF50; font-weight: bold;">Registrar Nueva Cancha</h2>
+                    <hr>
                     <!-- Formulario para registrar cancha -->
                     <form method="POST" action="{% url 'registro_cancha' %}">
                         {% csrf_token %}
@@ -18,52 +19,57 @@
                         </div>
                         <!-- Información de la dirección -->
                         <h4 class="text-center mt-4 mb-3" style="color: #2C3E50; font-weight: bold;">Dirección</h4>
+                        <hr>
                         <!-- Tipo de calle -->
-                        <div class="mb-4">
-                            <label for="tipo_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Tipo de Calle:</label>
-                            <select id="tipo_calle" name="tipo_calle" class="form-select form-select-lg shadow-sm" required>
-                                <option value="avenida">Avenida</option>
-                                <option value="calle">Calle</option>
-                                <option value="jiron">Jirón</option>
-                                <option value="pasaje">Pasaje</option>
-                            </select>
-                        </div>
-                        <!-- Nombre de la calle -->
-                        <div class="mb-4">
-                            <label for="nombre_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre de la Calle:</label>
-                            <input type="text" id="nombre_calle" name="nombre_calle" class="form-control form-control-lg shadow-sm" maxlength="50" placeholder="Nombre de la calle" required>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="tipo_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Tipo de Calle:</label>
+                                <select id="tipo_calle" name="tipo_calle" class="form-select form-select-lg shadow-sm" required>
+                                    <option value="avenida">Avenida</option>
+                                    <option value="calle">Calle</option>
+                                    <option value="jiron">Jirón</option>
+                                    <option value="pasaje">Pasaje</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="nombre_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre de la Calle:</label>
+                                <input type="text" id="nombre_calle" name="nombre_calle" value="{{ direccion.nombre_calle }}" 
+                                    class="form-control form-control-lg shadow-sm" maxlength="50" required>
+                            </div>
                         </div>
                         <!-- Número de la calle -->
-                        <div class="mb-4">
-                            <label for="numero_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Número de la Calle:</label>
-                            <input type="text" id="numero_calle" name="numero_calle" class="form-control form-control-lg shadow-sm" maxlength="5" placeholder="Número de la calle" pattern="\d+" title="Solo se permiten números" required>
-                        </div>
-                        <!-- Distrito -->
-                        <div class="mb-4">
-                            <label for="distrito" class="form-label" style="font-weight: bold; color: #F1C40F;">Distrito:</label>
-                            <select id="distrito" name="distrito" class="form-select form-select-lg shadow-sm" required>
-                                <option value="barranco">Barranco</option>
-                                <option value="callao">Callao</option>
-                                <option value="cercado_de_lima">Cercado de Lima</option>
-                                <option value="chorrillos">Chorrillos</option>
-                                <option value="jesus_maria">Jesús María</option>
-                                <option value="la_molina">La Molina</option>
-                                <option value="lince">Lince</option>
-                                <option value="los_olivos">Los Olivos</option>
-                                <option value="magdalena">Magdalena</option>
-                                <option value="miraflores">Miraflores</option>
-                                <option value="pueblo_libre">Pueblo Libre</option>
-                                <option value="rimac">Rímac</option>
-                                <option value="san_borja">San Borja</option>
-                                <option value="san_isidro">San Isidro</option>
-                                <option value="san_juan_de_lurigancho">San Juan de Lurigancho</option>
-                                <option value="san_juan_de_miraflores">San Juan de Miraflores</option>
-                                <option value="san_miguel">San Miguel</option>
-                                <option value="santiago_de_surco">Santiago de Surco</option>
-                                <option value="surquillo">Surquillo</option>
-                                <option value="ventanilla">Ventanilla</option>
-                                <option value="villa_maria_del_triunfo">Villa María del Triunfo</option>
-                            </select>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label for="numero_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Número de la Calle:</label>
+                                <input type="text" id="numero_calle" name="numero_calle" value="{{ direccion.numero_calle }}" 
+                                    class="form-control form-control-lg shadow-sm" maxlength="5" pattern="\d+" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="distrito" class="form-label" style="font-weight: bold; color: #F1C40F;">Distrito:</label>
+                                <select id="distrito" name="distrito" class="form-select form-select-lg shadow-sm" required>
+                                    <option value="barranco">Barranco</option>
+                                    <option value="callao">Callao</option>
+                                    <option value="cercado_de_lima">Cercado de Lima</option>
+                                    <option value="chorrillos">Chorrillos</option>
+                                    <option value="jesus_maria">Jesús María</option>
+                                    <option value="la_molina">La Molina</option>
+                                    <option value="lince">Lince</option>
+                                    <option value="los_olivos">Los Olivos</option>
+                                    <option value="magdalena">Magdalena</option>
+                                    <option value="miraflores">Miraflores</option>
+                                    <option value="pueblo_libre">Pueblo Libre</option>
+                                    <option value="rimac">Rímac</option>
+                                    <option value="san_borja">San Borja</option>
+                                    <option value="san_isidro">San Isidro</option>
+                                    <option value="san_juan_de_lurigancho">San Juan de Lurigancho</option>
+                                    <option value="san_juan_de_miraflores">San Juan de Miraflores</option>
+                                    <option value="san_miguel">San Miguel</option>
+                                    <option value="santiago_de_surco">Santiago de Surco</option>
+                                    <option value="surquillo">Surquillo</option>
+                                    <option value="ventanilla">Ventanilla</option>
+                                    <option value="villa_maria_del_triunfo">Villa María del Triunfo</option>
+                                </select>
+                            </div>
                         </div>
                         <!-- Referencia (opcional) -->
                         <div class="mb-4">

@@ -17,9 +17,6 @@
                     <label for="password" class="form-label" style="font-weight: bold; color: #F1C40F;">Contraseña:</label>
                     <input type="password" name="password" id="password" class="form-control form-control-lg shadow-sm {% if error %}is-invalid{% endif %}" placeholder="Ingresar contraseña" required>
                 </div>
-                {% if error %}
-                    <p class="text-center mt-3" style="color: red;">{{ error }}</p>
-                {% endif %}
                 <div class="text-center py-3">
                     <button type="submit" class="btn btn-lg w-100 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Ingresar</button>
                 </div>
@@ -28,5 +25,6 @@
     </div>
 </main>
 
+{% include "base/message.html" %}
+
 {% endblock %}
-z

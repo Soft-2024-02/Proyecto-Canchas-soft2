@@ -1,0 +1,35 @@
+<hr>
+<div class="d-flex justify-content-between align-items-center">
+    <h4 style="color: #2C3E50; font-weight: bold;">Información de la Cancha</h4>
+    {% if responsable %}
+    <a href="{% url 'editar_cancha' cancha.id cancha.slug %}" 
+        class="btn btn-warning shadow-sm ms-2" 
+        style="font-weight: bold;">
+        Editar Cancha
+    </a>
+    {% endif %}
+</div>
+<ul class="list-group list-group-flush mb-4">
+    <li class="list-group-item">
+        <strong style="color: #F1C40F;">Responsable:</strong> 
+        <a href="{% url 'perfil' cancha.responsable.id cancha.responsable.slug %}" 
+            class="text-decoration-none fw text-primary d-inline-flex align-items-center">
+            <span class="me-1" style="color: #4CAF50;">{{ cancha.responsable }}</span>
+            <i class="bi bi-person-circle" style="color: #4CAF50;"></i>
+        </a>
+    </li>
+    {% with direccion=cancha.direcciones.first %}
+    <li class="list-group-item">
+        <strong style="color: #F1C40F;">Dirección:</strong> 
+        {{ direccion.get_tipo_calle_display }} {{ direccion.nombre_calle }} 
+        {{ direccion.numero_calle }} - {{ direccion.get_distrito_display }}
+        {% if direccion.referencia %}
+        <br>
+        <strong style="color: #F1C40F;">Referencia:</strong> {{ direccion.referencia }}
+        {% endif %}
+    </li>
+    <li class="list-group-item">
+        <strong style="color: #F1C40F;">Disponible:</strong> {{ cancha.disponibilidad|yesno:"Sí,No" }}
+    </li>
+    {% endwith %}
+</ul>

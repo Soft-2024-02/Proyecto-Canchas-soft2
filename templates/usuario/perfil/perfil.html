@@ -19,7 +19,7 @@
                         {% for cancha in user.canchas.all %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <span>{{ cancha.nombre }}</span>
-                                <a href="" class="btn btn-outline-success btn-sm">
+                                <a href="{% url 'detalle_cancha' cancha.id cancha.slug %}" class="btn btn-outline-success btn-sm">
                                     Ver Detalles
                                 </a>
                             </li>
@@ -33,5 +33,7 @@
         </div>
     </div>
 </main>
+
+{% include "base/message.html" %}
 
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4" style="color: #4CAF50; font-weight: bold;">Editar Cancha</h2>
+                    <hr>
+                    <form method="POST" action="{% url 'editar_cancha' cancha.id cancha.slug %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="nombre" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre de la Cancha:</label>
+                            <input type="text" id="nombre" name="nombre" value="{{ cancha.nombre }}" 
+                                class="form-control form-control-lg shadow-sm" maxlength="100" required>
+                        </div>
+                        <!-- Incluir el template para editar la dirección de la cancha -->
+                        {% include "cancha/editar_cancha/editar_direccion.html" %}
+                        <!-- Botones para guardar cambios y cancelar -->
+                        <div class="text-center m-5">
+                            <a href="{% url 'detalle_cancha' cancha.id cancha.slug %}" class="btn btn-secondary px-4 py-2 shadow-sm me-2" 
+                                style="background-color: #2C3E50; color: #fff; font-weight: bold;">Cancelar</a>
+                                <button type="submit" class="btn px-4 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Guardar Cambios</button>
+                        </div>
+                        <!-- Botón para eliminar cancha que abre el modal -->
+                        {% include "cancha/editar_cancha/eliminar_cancha.html" %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include "base/message.html" %}
+
+{% endblock %}

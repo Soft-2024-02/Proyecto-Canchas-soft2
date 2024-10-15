@@ -1,0 +1,33 @@
+<hr>
+<h4 class="text-center mt-4 mb-3" style="color: #2C3E50; font-weight: bold;">Eliminar cancha</h4>
+<div class="text-center mt-4">
+    <button type="button" class="btn btn-danger px-4 py-2 shadow-sm" 
+            data-bs-toggle="modal" data-bs-target="#modalEliminarCancha" style="font-weight: bold;">
+        Eliminar Cancha
+    </button>
+</div>
+
+<div class="modal fade" id="modalEliminarCancha" tabindex="-1" aria-labelledby="modalEliminarCanchaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarCanchaLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Por favor, ingresa tu contraseña para confirmar la eliminación de la cancha.</p>
+                <form method="POST" action="{% url 'eliminar_cancha' cancha.id cancha.slug %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <input type="password" name="password" id="password" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar Cancha</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
