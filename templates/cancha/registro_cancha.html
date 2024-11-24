@@ -25,6 +25,7 @@
                             <div class="col-md-4">
                                 <label for="tipo_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Tipo de Calle:</label>
                                 <select id="tipo_calle" name="tipo_calle" class="form-select form-select-lg shadow-sm" required>
+                                    <option value="">Seleccionar calle</option>
                                     <option value="avenida">Avenida</option>
                                     <option value="calle">Calle</option>
                                     <option value="jiron">Jirón</option>
@@ -47,6 +48,7 @@
                             <div class="col-md-8">
                                 <label for="distrito" class="form-label" style="font-weight: bold; color: #F1C40F;">Distrito:</label>
                                 <select id="distrito" name="distrito" class="form-select form-select-lg shadow-sm" required>
+                                    <option value="">Seleccionar distrito</option>
                                     <option value="barranco">Barranco</option>
                                     <option value="callao">Callao</option>
                                     <option value="cercado_de_lima">Cercado de Lima</option>
@@ -81,17 +83,13 @@
                             <a href="{% url 'inicio' %}" class="btn btn-secondary px-4 py-2 shadow-sm me-2" style="background-color: #2C3E50; color: #fff; font-weight: bold;">Cancelar</a>
                             <button type="submit" class="btn px-4 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Registrar Cancha</button>
                         </div>
-                        <!-- Mostrar error si existe -->
-                        {% if error %}
-                            <div class="alert alert-danger mt-4 text-center" role="alert">
-                                {{ error }}
-                            </div>
-                        {% endif %}
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </main>
+
+{% include "base/message.html" %}
 
 {% endblock %}

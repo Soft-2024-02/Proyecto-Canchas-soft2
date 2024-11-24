@@ -60,11 +60,11 @@
                         <a class="dropdown-item" href="{% url 'perfil' request.user.id request.user.slug %}">Mi Perfil</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{% url 'inicio' %}">Mis Reservas</a>
+                        <a class="dropdown-item" href="{% url 'mis_reservas' %}">Mis Reservas</a>
                     </li>
                     {% if request.user.is_responsible %}
                     <li>
-                        <a class="dropdown-item" href="{% url 'inicio' %}">Mis Canchas</a>
+                        <a class="dropdown-item" href="{% url 'mis_canchas' %}">Mis Canchas</a>
                     </li>
                     {% endif %}
                     <li><hr class="dropdown-divider"></li>
