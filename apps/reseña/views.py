@@ -43,25 +43,6 @@ def calificar_cancha(request, cancha_id):
     return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
 
 @login_required
-def editar_reseña(request, cancha_id):
-    cancha = get_object_or_404(Cancha, id=cancha_id)
-    reseña = get_object_or_404(Reseña, usuario=request.user, cancha=cancha)
-    if request.method == 'POST':
-        calificacion = request.POST.get('calificacion')
-        comentario = request.POST.get('comentario', '').strip()
-        if not calificacion:
-            messages.error(request, "Debe seleccionar una calificación.")
-            return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
-        try:
-            reseña.calificacion = int(calificacion)
-            reseña.comentario = comentario
-            reseña.save()
-            messages.success(request, "Reseña actualizada correctamente.")
-        except Exception as e:
-            messages.error(request, f"Ocurrió un error al actualizar la reseña: {e}")
-    return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
-
-@login_required
 def eliminar_reseña(request, reseña_id):
     try:
         reseña = get_object_or_404(Reseña, id=reseña_id, usuario=request.user)
