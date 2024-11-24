@@ -1,0 +1,72 @@
+<div class="modal fade" id="calificarModal" tabindex="-1" aria-labelledby="calificarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{% if reseña %}{% url 'editar_reseña' cancha.id %}{% else %}{% url 'calificar_cancha' cancha.id %}{% endif %}">
+                {% csrf_token %}
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="calificarModalLabel">
+                        {% if reseña %}
+                            Editar Reseña
+                        {% else %}
+                            Calificar Cancha
+                        {% endif %}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="calificacion" class="form-label">Calificación:</label>
+                        <div id="calificacion" class="rating">
+                            {% for i in "54321" %}
+                                <input type="radio" name="calificacion" id="estrella{{ i }}" value="{{ i }}"
+                                    {% if reseña and reseña.calificacion == i|add:0 %}checked{% endif %}>
+                                <label for="estrella{{ i }}" title="{{ i }} estrellas">
+                                    <i class="bi bi-star"></i>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comentario" class="form-label">Comentario (opcional):</label>
+                        <textarea id="comentario" name="comentario" class="form-control" rows="3"
+                            placeholder="Escribe tu comentario aquí...">{% if reseña %}{{ reseña.comentario }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    {% if reseña %}
+                        <a href="{% url 'eliminar_reseña' reseña.id %}" class="btn btn-danger">Eliminar reseña</a>
+                        <button type="submit" class="btn btn-success">Guardar cambios</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-success">Enviar Calificación</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Contenedor de las estrellas */
+    .rating {
+        direction: rtl; /* Las estrellas se seleccionan de derecha a izquierda */
+        display: inline-flex;
+    }
+    .rating input {
+        display: none; /* Ocultar los radio buttons */
+    }
+    .rating label {
+        font-size: 2rem; /* Tamaño de las estrellas */
+        color: #ddd; /* Color base de las estrellas (gris) */
+        cursor: pointer;
+        transition: transform 0.2s, color 0.2s; /* Transiciones suaves */
+    }
+    .rating label:hover,
+    .rating label:hover ~ label {
+        color: #ffc107; /* Color dorado al pasar el mouse */
+        transform: scale(1.2); /* Agrandar ligeramente al pasar el mouse */
+    }
+    .rating input:checked ~ label {
+        color: #ffc107; /* Color dorado para estrellas seleccionadas */
+    }
+</style>

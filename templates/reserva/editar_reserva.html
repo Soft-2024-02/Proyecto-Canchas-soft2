@@ -1,0 +1,147 @@
+<div class="modal fade" id="modalEditarReserva" tabindex="-1" aria-labelledby="modalEditarReservaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-black">
+                <h5 class="modal-title" id="modalEditarReservaLabel">Editar Reserva</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 style="color: #4CAF50;">Selecciona un nuevo horario:</h6>
+                <hr>
+                <form id="editarReservaForm" method="POST">
+                    {% csrf_token %}
+                    <div class="hour-grid-container">
+                        {% for dia in dias_horarios %}
+                        <div class="day-section mb-4">
+                            <h6 style="color: #2C3E50; font-weight: bold;">{{ dia.dia }}</h6>
+                            <div class="hour-grid d-flex flex-wrap">
+                                {% for hora in dia.horas %}
+                                <div 
+                                    class="hour-block {{ hora.estado }} m-2 text-decoration-none d-flex justify-content-center align-items-center {% if hora.id and hora.estado == 'verde' %}selectable{% endif %}"
+                                    data-horario-id="{{ hora.id }}"
+                                    data-hora-inicio="{{ hora.hora_inicio }}"
+                                    data-hora-fin="{{ hora.hora_fin }}"
+                                    title="{{ hora.hora_inicio }} - {{ hora.hora_fin }}"
+                                    style="{% if not hora.id or hora.estado == 'gris' or hora.estado == 'rojo' or hora.hora_inicio == reserva.hora_reserva_inicio|time:'H:i' %}pointer-events: none;{% endif %}">
+                                    <span class="text-white">{{ hora.hora_inicio }} - {{ hora.hora_fin }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+                <div class="text-center mt-4">
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button 
+                        id="guardar-cambios-btn" 
+                        type="submit" 
+                        form="editarReservaForm" 
+                        class="btn btn-success" 
+                        disabled> 
+                        Guardar cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hour-grid-container {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 0 10px;
+    }
+    .hour-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .hour-block {
+        width: 100px;
+        height: 50px;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 2px solid transparent;
+    }
+    .hour-block:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+    .hour-block.gris {
+        background-color: #d3d3d3; 
+        color: black;
+    }
+    .hour-block.verde {
+        background-color: #4caf50; 
+        color: white;
+    }
+    .hour-block.rojo {
+        background-color: #f44336; 
+        color: white;
+    }
+    .hour-block.selectable:hover {
+        border-color: #FFC107; /* Resaltado al seleccionar */
+    }
+    .hour-block.selected {
+        border-color: #FFC107; 
+        transform: scale(1.2);
+    }
+    .btn-success {
+        background-color: #4CAF50;
+        border: none;
+    }
+    .btn-success:disabled {
+        background-color: #d3d3d3;
+        cursor: not-allowed;
+    }
+    .btn-success:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const hourBlocks = document.querySelectorAll('.hour-block.selectable');
+        const guardarCambiosBtn = document.getElementById('guardar-cambios-btn');
+        const editarReservaForm = document.getElementById('editarReservaForm');
+        let selectedBlock = null;
+        hourBlocks.forEach(block => {
+            block.addEventListener('click', function() {
+                // Deseleccionar el bloque previo
+                if (selectedBlock) {
+                    selectedBlock.classList.remove('selected');
+                }
+                // Seleccionar el bloque actual
+                this.classList.add('selected');
+                selectedBlock = this;
+                // Habilitar el botón de guardar cambios
+                guardarCambiosBtn.disabled = false;
+                // Extraer valores seleccionados
+                const horarioId = this.getAttribute('data-horario-id');
+                const nuevaHoraInicio = this.getAttribute('data-hora-inicio');
+                const nuevaHoraFin = this.getAttribute('data-hora-fin');
+                // Actualizar el `action` del formulario
+                editarReservaForm.action = `{% url 'editar_reserva' reserva.id 0 '00:00' '23:59' %}`
+                    .replace('/0/', `/${horarioId}/`)
+                    .replace('00:00', `${nuevaHoraInicio}`)
+                    .replace('23:59', `${nuevaHoraFin}`);
+            });
+        });
+    });
+</script>
+
