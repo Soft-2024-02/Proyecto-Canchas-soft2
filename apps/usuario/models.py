@@ -63,7 +63,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     nombre = models.CharField('Nombre', max_length=35)
     apellidos = models.CharField('Apellidos', max_length=35)
     celular = models.CharField('Celular', max_length=9, unique=True)
-    imagen = models.ImageField('Imagen', upload_to='usuarios/', default='usuarios/default-avatar.jpg')
+    imagen = models.ImageField('Imagen', upload_to='usuarios/', blank=True, null=True)
     is_active = models.BooleanField('Activo', default=True)
     is_staff = models.BooleanField('Staff', default=False)
     is_superuser = models.BooleanField('Superusuario', default=False)

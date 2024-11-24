@@ -3,13 +3,15 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.utils.timezone import now
 from django.contrib import messages
 from django.urls import reverse
-from django.db.models import Q
 from rest_framework import viewsets
 from .serializer import UsuarioSerializer
 from .models import Usuario
 from .forms import RegistroUsuarioForm
+from apps.cancha.models import Cancha
+from apps.reserva.models import Reserva
 
 # ViewSet para la API REST
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -17,8 +19,6 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     lookup_field = 'slug'
 
-
-# Vista para la página de inicio
 def inicio(request):
     from apps.cancha.models import Cancha
     canchas = Cancha.objects.prefetch_related('direcciones').all()
@@ -61,8 +61,6 @@ def inicio(request):
     
     return render(request, 'usuario/inicio/inicio.html', contexto)
 
-
-# Registro de usuarios (formulario de signup)
 def signup(request):
     if request.user.is_authenticated:
         return redirect('inicio')
@@ -88,8 +86,6 @@ def signup(request):
     
     return render(request, 'usuario/signup.html', {'form': form})
 
-
-# Inicio de sesión
 def signin(request):
     if request.user.is_authenticated:
         return redirect('inicio')
@@ -107,15 +103,11 @@ def signin(request):
         return render(request, 'usuario/signin.html', {'form': AuthenticationForm})
     return render(request, 'usuario/signin.html', {'form': AuthenticationForm})
 
-
-# Cerrar sesión
 @login_required
 def signout(request):
     logout(request)
     return redirect('signin')
 
-
-# Ver el perfil de usuarios
 def perfil(request, usuario_id, usuario_slug):
     user = get_object_or_404(Usuario, id=usuario_id, slug=usuario_slug)
     contexto = {'user': user}
@@ -123,12 +115,9 @@ def perfil(request, usuario_id, usuario_slug):
         contexto['responsable'] = user
     return render(request, 'usuario/perfil/perfil.html', contexto)
 
-
-# Lleva a la vista de edición de perfil
 @login_required
 def editar_perfil(request):
     return render(request, 'usuario/editar_perfil/editar_perfil.html')
-
 
 def validar_datos(request, user):
     email = request.POST.get('email')
@@ -139,7 +128,8 @@ def validar_datos(request, user):
     
     if not (email, dni, nombre, apellidos, celular):
         return None, 'Datos no válidos. Intente nuevamente.'
-    
+    if not nombre.isalpha() or not apellidos.isalpha():
+        return None, 'El nombre y apellidos no pueden contener números ni caracteres especiales.'
     if len(dni) != 8 or not dni.isdigit():
         return None, 'El DNI debe tener 8 dígitos numéricos.'
     if len(celular) != 9 or not celular.isdigit():
@@ -162,7 +152,6 @@ def validar_datos(request, user):
         'celular': celular
     }, None
 
-# Actualizar perfil (con validación)
 @login_required
 @require_POST
 def actualizar_perfil(request):
@@ -181,8 +170,6 @@ def actualizar_perfil(request):
         messages.success(request, 'Datos actualizados correctamente.')
     return redirect('perfil', user.id, user.slug)
 
-
-# Cambiar imagen de perfil
 @login_required
 @require_POST
 def cambiar_imagen(request):
@@ -200,8 +187,6 @@ def cambiar_imagen(request):
             return redirect('perfil', user.id, user.slug)
     return render(request, 'usuario/editar_perfil/editar_perfil.html', {'user': user})
 
-
-# Validar contraseñas
 def validar_password(password):
     if len(password) < 8:
         return 'La contraseña debe tener al menos 8 caracteres.'
@@ -211,7 +196,6 @@ def validar_password(password):
         return 'La contraseña debe tener al menos una letra mayúscula y una minúscula.'
     return None
 
-# Cambiar la contraseña
 @login_required
 @require_POST
 def cambiar_contrasena(request):
@@ -236,7 +220,6 @@ def cambiar_contrasena(request):
             messages.error(request, 'Contraseña actual incorrecta.')
     return render(request, 'usuario/editar_perfil/editar_perfil.html', {'user': user})
 
-
 @login_required
 @require_POST
 def eliminar_cuenta(request):
@@ -251,7 +234,34 @@ def eliminar_cuenta(request):
         messages.error(request, 'Contraseña incorrecta. No se pudo eliminar la cuenta.')
         return redirect('editar_perfil')
 
+@login_required
+def mis_reservas(request):
+    try:
+        reservas = Reserva.objects.filter(
+            usuario=request.user,
+            horario__dia__gte=now().date()
+        ).select_related('horario', 'horario__cancha').order_by('horario__dia', 'hora_reserva_inicio')
+    except Reserva.DoesNotExist:
+        messages.error(request, "No tienes reservas activas en este momento.")
+        return redirect('mis_reservas')
+    
+    contexto = {
+        'reservas': reservas,
+    }
+    return render(request, 'reserva/mis_reservas.html', contexto)
 
-# Manejo de errores 404 personalizados
+@login_required
+def mis_canchas(request):
+    try:
+        canchas = Cancha.objects.filter(responsable=request.user).prefetch_related('direcciones')
+    except Reserva.DoesNotExist:
+        messages.error(request, "No tienes canchas registradas.")
+        return redirect('mis_canchas')
+    
+    contexto = {
+        'canchas': canchas,
+    }
+    return render(request, 'usuario/mis_canchas.html', contexto)
+
 def error_404_view(request, exception):
     return render(request, 'base/404.html', status=404)

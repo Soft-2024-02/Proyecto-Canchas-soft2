@@ -20,5 +20,7 @@ urlpatterns = [
     path('perfil/cambiar-imagen/', views.cambiar_imagen, name='cambiar_imagen'),
     path('perfil/cambiar-contrasena/', views.cambiar_contrasena, name='cambiar_contrasena'),
     path('perfil/eliminar/', views.eliminar_cuenta, name='eliminar_cuenta'),
+    path('mis-reservas/', views.mis_reservas, name='mis_reservas'),
+    path('mis-canchas/', views.mis_canchas, name='mis_canchas'),
     
 ]

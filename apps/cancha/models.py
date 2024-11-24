@@ -7,6 +7,7 @@ class Cancha(models.Model):
     responsable = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='canchas')
     nombre = models.CharField('Nombre de la cancha', max_length=100, blank=False, null=False)
     disponibilidad = models.BooleanField('Disponible', default=False, blank=False, null=False)
+    imagen = models.ImageField('Imagen de la Cancha', upload_to='canchas/', blank=True, null=True)
     fecha_creacion = models.DateField(auto_now_add=True)
     ultima_modificacion = models.DateField(auto_now=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
@@ -31,6 +32,9 @@ class Cancha(models.Model):
         if not self.pk or Cancha.objects.get(pk=self.pk).nombre != self.nombre:
             self.slug = slugify(self.nombre)
         
+        if not self.imagen or self.imagen.name == '':
+            self.imagen.name = 'canchas/default-cancha.jpg'
+        
         super(Cancha, self).save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
@@ -45,3 +49,7 @@ class Cancha(models.Model):
             if responsable_group in self.responsable.groups.all():
                 self.responsable.groups.remove(responsable_group)
                 self.responsable.groups.add(cliente_group)
+    
+    def promedio_calificaciones(self):
+        promedio = self.reseñas.aggregate(models.Avg('calificacion'))['calificacion__avg']
+        return round(promedio, 1) if promedio else "Sin calificaciones"

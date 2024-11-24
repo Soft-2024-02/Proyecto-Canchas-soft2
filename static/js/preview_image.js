@@ -9,7 +9,8 @@ function previewImage(event) {
     }
 }
 function resetImage() {
-    const defaultImage = "https://imgur.com/CuXg45K.jpg";
+    const defaultImage = document.getElementById('profileImagePreview').getAttribute('data-default-url');
+    console.log(defaultImage);
     document.getElementById('profileImagePreview').src = defaultImage;
     document.getElementById('profileImageInput').value = "";
 }
