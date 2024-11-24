@@ -1,0 +1,34 @@
+<div class="mt-5">
+    <h4 style="color: #2C3E50; font-weight: bold;">Reseñas de {{cancha}}</h4>
+    <hr>
+    {% if reseñas %}
+        <div class="list-group">
+            {% for reseña in reseñas %}
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>
+                        <a href="{% url 'perfil' reseña.usuario.id reseña.usuario.slug %}" 
+                            class="text-decoration-none fw text-primary d-inline-flex align-items-center">
+                            <span class="me-1" style="color: #F1C40F; font-weight: bold;">{{ reseña.usuario }}</span>
+                            <i class="bi bi-person-circle" style="color: #F1C40F;"></i>
+                        </a>
+                    </strong>
+                    <div>
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= reseña.calificacion %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% else %}
+                                <i class="bi bi-star text-muted"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <p class="mt-2 mb-0" style="color: #4CAF50; font-weight: bold;">Comentario:</p>
+                <p class="mb-0">{{ reseña.comentario|default:"Sin comentario" }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">Sin reseñas.</p>
+    {% endif %}
+</div>

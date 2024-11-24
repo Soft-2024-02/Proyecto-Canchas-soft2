@@ -5,17 +5,15 @@
                 class="form-control form-control-lg shadow-sm" 
                 placeholder="Busca por nombre de cancha"
                 style="border: 2px solid #4CAF50; font-size: 1.2rem;">
-            <select name="distrito" class="form-select form-select-sm" 
-                    style="max-width: 200px;">
+            <select name="distrito" class="form-select form-select-sm" style="max-width: 200px;">
                 <option value="">Todos los distritos</option>
                 {% for value, label in DISTRITOS %}
-                <option value="{{ value }}" {% if distrito == value %}selected{% endif %}>
-                    {{ label }}
-                </option>
+                    <option value="{{ value }}" {% if distrito == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
                 {% endfor %}
             </select>
-            <button class="btn btn-success ms-2 px-4" type="submit" 
-                    style="background-color: #4CAF50; font-weight: bold;">
+            <button type="submit" class="btn btn-success px-4" style="background-color: #4CAF50; font-weight: bold;">
                 Buscar
             </button>
         </form>

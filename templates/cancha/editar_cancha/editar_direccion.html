@@ -5,10 +5,10 @@
     <div class="col-md-4">
         <label for="tipo_calle" class="form-label" style="font-weight: bold; color: #F1C40F;">Tipo de Calle:</label>
         <select id="tipo_calle" name="tipo_calle" class="form-select form-select-lg shadow-sm" required>
-            <option value="avenida">Avenida</option>
-            <option value="calle">Calle</option>
-            <option value="jiron">Jirón</option>
-            <option value="pasaje">Pasaje</option>
+            <option value="avenida" {% if direccion.tipo_calle == 'avenida' %}selected{% endif %}>Avenida</option>
+            <option value="calle" {% if direccion.tipo_calle == 'calle' %}selected{% endif %}>Calle</option>
+            <option value="jiron" {% if direccion.tipo_calle == 'jiron' %}selected{% endif %}>Jirón</option>
+            <option value="pasaje" {% if direccion.tipo_calle == 'pasaje' %}selected{% endif %}>Pasaje</option>
         </select>
     </div>
     <div class="col-md-8">
@@ -26,27 +26,27 @@
     <div class="col-md-8">
         <label for="distrito" class="form-label" style="font-weight: bold; color: #F1C40F;">Distrito:</label>
         <select id="distrito" name="distrito" class="form-select form-select-lg shadow-sm" required>
-            <option value="barranco">Barranco</option>
-            <option value="callao">Callao</option>
-            <option value="cercado_de_lima">Cercado de Lima</option>
-            <option value="chorrillos">Chorrillos</option>
-            <option value="jesus_maria">Jesús María</option>
-            <option value="la_molina">La Molina</option>
-            <option value="lince">Lince</option>
-            <option value="los_olivos">Los Olivos</option>
-            <option value="magdalena">Magdalena</option>
-            <option value="miraflores">Miraflores</option>
-            <option value="pueblo_libre">Pueblo Libre</option>
-            <option value="rimac">Rímac</option>
-            <option value="san_borja">San Borja</option>
-            <option value="san_isidro">San Isidro</option>
-            <option value="san_juan_de_lurigancho">San Juan de Lurigancho</option>
-            <option value="san_juan_de_miraflores">San Juan de Miraflores</option>
-            <option value="san_miguel">San Miguel</option>
-            <option value="santiago_de_surco">Santiago de Surco</option>
-            <option value="surquillo">Surquillo</option>
-            <option value="ventanilla">Ventanilla</option>
-            <option value="villa_maria_del_triunfo">Villa María del Triunfo</option>
+            <option value="barranco" {% if direccion.distrito == 'barranco' %}selected{% endif %}>Barranco</option>
+            <option value="callao" {% if direccion.distrito == 'callao' %}selected{% endif %}>Callao</option>
+            <option value="cercado_de_lima" {% if direccion.distrito == 'cercado_de_lima' %}selected{% endif %}>Cercado de Lima</option>
+            <option value="chorrillos" {% if direccion.distrito == 'chorrillos' %}selected{% endif %}>Chorrillos</option>
+            <option value="jesus_maria" {% if direccion.distrito == 'jesus_maria' %}selected{% endif %}>Jesús María</option>
+            <option value="la_molina" {% if direccion.distrito == 'la_molina' %}selected{% endif %}>La Molina</option>
+            <option value="lince" {% if direccion.distrito == 'lince' %}selected{% endif %}>Lince</option>
+            <option value="los_olivos" {% if direccion.distrito == 'los_olivos' %}selected{% endif %}>Los Olivos</option>
+            <option value="magdalena" {% if direccion.distrito == 'magdalena' %}selected{% endif %}>Magdalena</option>
+            <option value="miraflores" {% if direccion.distrito == 'miraflores' %}selected{% endif %}>Miraflores</option>
+            <option value="pueblo_libre" {% if direccion.distrito == 'pueblo_libre' %}selected{% endif %}>Pueblo Libre</option>
+            <option value="rimac" {% if direccion.distrito == 'rimac' %}selected{% endif %}>Rímac</option>
+            <option value="san_borja" {% if direccion.distrito == 'san_borja' %}selected{% endif %}>San Borja</option>
+            <option value="san_isidro" {% if direccion.distrito == 'san_isidro' %}selected{% endif %}>San Isidro</option>
+            <option value="san_juan_de_lurigancho" {% if direccion.distrito == 'san_juan_de_lurigancho' %}selected{% endif %}>San Juan de Lurigancho</option>
+            <option value="san_juan_de_miraflores" {% if direccion.distrito == 'san_juan_de_miraflores' %}selected{% endif %}>San Juan de Miraflores</option>
+            <option value="san_miguel" {% if direccion.distrito == 'san_miguel' %}selected{% endif %}>San Miguel</option>
+            <option value="santiago_de_surco" {% if direccion.distrito == 'santiago_de_surco' %}selected{% endif %}>Santiago de Surco</option>
+            <option value="surquillo" {% if direccion.distrito == 'surquillo' %}selected{% endif %}>Surquillo</option>
+            <option value="ventanilla" {% if direccion.distrito == 'ventanilla' %}selected{% endif %}>Ventanilla</option>
+            <option value="villa_maria_del_triunfo" {% if direccion.distrito == 'villa_maria_del_triunfo' %}selected{% endif %}>Villa María del Triunfo</option>
         </select>
     </div>
 </div>

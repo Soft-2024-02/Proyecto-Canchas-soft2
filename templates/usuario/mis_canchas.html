@@ -1,0 +1,44 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<main class="container py-5">
+    <div class="row">
+        <div class="col-lg-12 text-center mb-4">
+            <h2 class="display-5" style="color: #4CAF50; font-weight: bold;">Mis Canchas</h2>
+        </div>
+    </div>
+    {% if canchas %}
+        <div class="row g-4">
+            {% for cancha in canchas %}
+                {% include "usuario/inicio/bloque_cancha.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">No tienes canchas registradas.</p>
+        <div class="text-center mt-4">
+            <a href="{% url 'registro_cancha' %}" class="btn btn-success shadow-sm">
+                Registrar Cancha
+            </a>
+        </div>
+    {% endif %}
+</main>
+
+{% include "base/message.html" %}
+
+<style>
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style>
+
+{% endblock %}

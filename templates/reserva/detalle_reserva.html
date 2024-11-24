@@ -1,0 +1,78 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg position-relative">
+                <!-- Imagen de la cancha -->
+                <img src="{% if reserva.horario.cancha.imagen %}{{ reserva.horario.cancha.imagen.url }}{% else %}{% static 'images/default-cancha.jpg' %}{% endif %}" 
+                    class="card-img-top" alt="Cancha {{ reserva.horario.cancha.nombre }}" 
+                    style="height: 350px; object-fit: cover;">
+                <div class="card-body p-5">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h2 class="text flex-grow-1" style="color: #4CAF50; font-weight: bold; margin: 0;">
+                            Detalle de Reserva
+                        </h2>
+                        <a href="{% url 'mis_reservas' %}" 
+                            class="btn btn-secondary shadow-sm" 
+                            style="background-color: #2C3E50; color: #fff; font-weight: bold;">
+                            <i class="bi bi-arrow-left me-1"></i>Mis Reservas
+                        </a>
+                    </div>
+                    <hr>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item">
+                            <strong style="color: #F1C40F;">Cancha:</strong> 
+                            <a href="{% url 'detalle_cancha' reserva.horario.cancha.id reserva.horario.cancha.slug %}"
+                                class="text-decoration-none fw text-primary d-inline-flex align-items-center">
+                                <span class="me-1" style="color: #4CAF50;">{{ reserva.horario.cancha.nombre }}</span>
+                                <i class="bi bi-person-circle" style="color: #4CAF50;"></i>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <strong style="color: #F1C40F;">Fecha reservada:</strong> 
+                            {{ reserva.horario.dia|date:"M. d, Y" }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong style="color: #F1C40F;">Horario:</strong> 
+                            {{ reserva.hora_reserva_inicio|time:"g:i a" }} - {{ reserva.hora_reserva_fin|time:"g:i a" }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong style="color: #F1C40F;">Fecha de reserva:</strong> 
+                            {{ reserva.fecha_reserva|date:"M. d, Y" }}
+                        </li>
+                    </ul>
+                    <div class="d-flex justify-content-center">
+                        <button 
+                            class="btn btn-warning shadow-sm me-2" 
+                            style="font-weight: bold;" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalEditarReserva">
+                            Editar horario
+                        </button>
+                        <button 
+                            class="btn btn-danger" 
+                            style="font-weight: bold;" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalCancelarReserva">
+                            Cancelar reserva
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal para editar reserva -->
+{% include "reserva/editar_reserva.html" %}
+<!-- Modal para cancelar reserva -->
+{% include "reserva/cancelar_reserva.html" %}
+
+{% include "base/message.html" %}
+
+{% endblock %}

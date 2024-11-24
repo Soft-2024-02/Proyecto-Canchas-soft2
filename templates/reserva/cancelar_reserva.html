@@ -1,0 +1,23 @@
+<div class="modal fade" id="modalCancelarReserva" tabindex="-1" aria-labelledby="modalCancelarReservaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalCancelarReservaLabel">Confirmar Cancelación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
+                <p><strong>Cancha:</strong> {{ reserva.horario.cancha.nombre }}</p>
+                <p><strong>Horario:</strong> {{ reserva.hora_reserva_inicio|time:"g:i a" }} - {{ reserva.hora_reserva_fin|time:"g:i a" }}</p>
+                <p><strong>Fecha:</strong> {{ reserva.horario.dia|date:"M. d, Y" }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <form method="POST" action="{% url 'cancelar_reserva' reserva.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

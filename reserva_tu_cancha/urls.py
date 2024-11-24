@@ -10,6 +10,9 @@ urlpatterns = [
     path('usuario/', include('apps.usuario.urls')),
     path('cancha/', include('apps.cancha.urls')),
     path('direccion/', include('apps.direccion.urls')),
+    path('horario/', include('apps.horario.urls')),
+    path('reserva/', include('apps.reserva.urls')),
+    path('reseña/', include('apps.reseña.urls')),
 ]
 
 if settings.DEBUG:

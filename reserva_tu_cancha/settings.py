@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'apps.usuario',
     'apps.cancha',
     'apps.direccion',
+    'apps.horario',
+    'apps.reserva',
+    'apps.reseña',
     
 ]
 
@@ -52,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.horario.middleware.auto_delete_old_horarios.AutoDeleteOldHorariosMiddleware',
+    'apps.cancha.middleware.cancha_availability.CanchaAvailabilityMiddleware',
 ]
 
 ROOT_URLCONF = 'reserva_tu_cancha.urls'

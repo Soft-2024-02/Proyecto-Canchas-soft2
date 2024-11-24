@@ -1,0 +1,45 @@
+<div class="modal fade" id="modalEditarHorarios{{ forloop.counter }}" tabindex="-1" aria-labelledby="modalEditarHorariosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'editar_horarios_dia' cancha.id cancha.slug %}">
+                {% csrf_token %}
+                <div class="modal-header bg-warning text-black">
+                    <h5 class="modal-title" id="modalEditarHorariosLabel">Editar Horarios del {{ dia.dia }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Día -->
+                    <input type="hidden" name="dia" value="{{ dia.dia }}">
+                    <!-- Selección de Hora de Inicio -->
+                    <div class="mb-3">
+                        <label for="hora_inicio_{{ forloop.counter }}" class="form-label">Hora de Inicio</label>
+                        <select class="form-control" id="hora_inicio_{{ forloop.counter }}" name="hora_inicio" required>
+                            {% for hora in dia.horas %}
+                                <option value="{{ hora.hora_inicio }}" 
+                                    {% if hora.hora_inicio == dia.hora_inicio %}selected{% endif %}>
+                                    {{ hora.hora_inicio }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Selección de Hora de Fin -->
+                    <div class="mb-3">
+                        <label for="hora_fin_{{ forloop.counter }}" class="form-label">Hora de Fin</label>
+                        <select class="form-control" id="hora_fin_{{ forloop.counter }}" name="hora_fin" required>
+                            {% for hora in dia.horas %}
+                                <option value="{{ hora.hora_fin }}" 
+                                    {% if hora.hora_fin == dia.hora_fin %}selected{% endif %}>
+                                    {{ hora.hora_fin }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -42,6 +42,71 @@ class ReservaViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         return super(ReservaViewSet, self).destroy(request, *args, **kwargs)
 
+def obtener_dias_horarios_reserva(reserva):
+    horarios = Horario.objects.filter(cancha=reserva.horario.cancha).order_by('dia', 'hora_inicio')
+    today = datetime.now().date()
+    
+    dias_horarios = []
+    for dia, horarios_dia in groupby(horarios, key=attrgetter('dia')):
+        horarios_dia = list(horarios_dia)
+        horas_dia = []
+        for h in range(24):
+            hora_inicio = time(hour=h, minute=0)
+            if h == 23:
+                hora_fin = time(hour=23, minute=59)
+            else:
+                hora_fin = (datetime.combine(today, hora_inicio) + timedelta(hours=1)).time()
+            
+            # Verificar si el bloque coincide con un horario creado
+            horario_encontrado = next(
+                (horario for horario in horarios_dia if horario.hora_inicio <= hora_inicio < horario.hora_fin),
+                None
+            )
+            if horario_encontrado:
+                # Verificar si está reservado
+                reservado = Reserva.objects.filter(
+                    horario=horario_encontrado,
+                    hora_reserva_inicio=hora_inicio,
+                    hora_reserva_fin=hora_fin
+                )
+                if reservado:
+                    estado = "rojo"  # Reservado
+                else:
+                    estado = "verde"  # Disponible
+            else:
+                estado = "gris"  # Sin horario
+            
+            horas_dia.append({
+                "id": horario_encontrado.id if horario_encontrado else None,
+                "hora_inicio": hora_inicio.strftime('%H:%M'),
+                "hora_fin": hora_fin.strftime('%H:%M'),
+                "estado": estado,
+            })
+        
+        dias_horarios.append({
+            "dia": dia.strftime('%Y-%m-%d'),
+            "horas": horas_dia,
+            "hora_inicio": horarios_dia[0].hora_inicio.strftime('%H:%M') if horarios_dia else None,
+            "hora_fin": horarios_dia[-1].hora_fin.strftime('%H:%M') if horarios_dia else None,
+        })
+    return dias_horarios
+
+@never_cache
+@login_required
+def detalle_reserva(request, reserva_id):
+    try:
+        reserva = Reserva.objects.select_related('horario__cancha').get(id=reserva_id, usuario=request.user)
+        dias_horarios = obtener_dias_horarios_reserva(reserva)
+    except Reserva.DoesNotExist:
+        messages.error(request, "La reserva que intentas ver ya no existe.")
+        return redirect('mis_reservas')
+    
+    contexto = {
+        'reserva': reserva,
+        'dias_horarios': dias_horarios,
+    }
+    return render(request, 'reserva/detalle_reserva.html', contexto)
+
 @never_cache
 @login_required
 @require_POST

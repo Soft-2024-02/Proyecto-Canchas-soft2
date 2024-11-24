@@ -23,15 +23,20 @@ def inicio(request):
     from apps.cancha.models import Cancha
     canchas = Cancha.objects.prefetch_related('direcciones').all()
     
+    lista_canchas = []
+    for cancha in canchas:
+        calificacion = cancha.promedio_calificaciones()
+        lista_canchas.append({'cancha': cancha, 'calificacion': calificacion})
+    
     query = request.GET.get('q', '')
     distrito = request.GET.get('distrito', '')
     if query:
         canchas = canchas.filter(nombre__icontains=query)
     if distrito:
         canchas = canchas.filter(direcciones__distrito=distrito)
-        
+    
     contexto = {
-        'canchas': canchas,
+        'canchas': lista_canchas,
         'query': query,
         'distrito': distrito,
         'DISTRITOS': [
@@ -58,7 +63,6 @@ def inicio(request):
             ('villa_maria_del_triunfo', 'Villa María del Triunfo'),
         ],
     }
-    
     return render(request, 'usuario/inicio/inicio.html', contexto)
 
 def signup(request):

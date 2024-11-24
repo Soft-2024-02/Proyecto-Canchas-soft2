@@ -1,0 +1,139 @@
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <h4 style="color: #2C3E50; font-weight: bold;">Horarios Disponibles</h4>
+    {% if responsable %}
+        <button class="btn btn-success shadow-sm ms-2" 
+            style="font-weight: bold;" 
+            data-bs-toggle="modal" 
+            data-bs-target="#modalAgregarHorario">
+            Agregar Horario
+        </button>
+    {% endif %}
+</div>
+<div class="mb-4 mt-4">
+    {% if dias_horarios %}
+        <div class="accordion" id="accordionHorarios">
+            {% for dia in dias_horarios %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                    <button 
+                        class="accordion-button collapsed" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapse{{ forloop.counter }}" 
+                        aria-expanded="false" 
+                        aria-controls="collapse{{ forloop.counter }}">
+                        {{ dia.dia }}
+                    </button>
+                </h2>
+                <!-- Contenido colapsable con horarios -->
+                <div 
+                    id="collapse{{ forloop.counter }}" 
+                    class="accordion-collapse collapse" 
+                    aria-labelledby="heading{{ forloop.counter }}" 
+                    data-bs-parent="#accordionHorarios">
+                    <div class="accordion-body">
+                        <!-- Botones para editar y eliminar -->
+                        {% if responsable %}
+                        <div class="d-flex justify-content-end m-2">
+                            <button 
+                                class="btn btn-warning btn-sm me-2" 
+                                style="font-weight: bold;" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalEditarHorarios{{ forloop.counter }}">
+                                Editar
+                            </button>
+                            <button 
+                                class="btn btn-danger btn-sm" 
+                                style="font-weight: bold;" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalEliminarHorarios{{ forloop.counter }}">
+                                Eliminar
+                            </button>
+                        </div>
+                        {% endif %}
+                        <!-- Grilla de horarios -->
+                        <div class="hour-grid d-flex flex-wrap">
+                            {% for hora in dia.horas %}
+                            <a 
+                                href="{% if hora.id and hora.estado == 'verde' %}{% url 'detalle_horario' cancha.id cancha.slug hora.id hora.hora_inicio hora.hora_fin %}{% else %}#{% endif %}" 
+                                class="hour-block {{ hora.estado }} m-2 text-decoration-none d-flex justify-content-center align-items-center"
+                                title="{{ hora.hora_inicio }} - {{ hora.hora_fin }}"
+                                style="{% if not hora.id or hora.estado != 'verde' %}pointer-events: none;{% endif %}">
+                                <span class="text-white">{{ hora.hora_inicio }} - {{ hora.hora_fin }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modales para editar y eliminar horarios -->
+            {% include "cancha/detalle_cancha/modal_horario/editar_horario.html" %}
+            {% include "cancha/detalle_cancha/modal_horario/eliminar_horario.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No hay horarios disponibles en este momento.</p>
+    {% endif %}
+</div>
+
+<!-- Modal para agregar horarios -->
+{% include "cancha/detalle_cancha/modal_horario/agregar_horario.html" %}
+
+<style>
+    /* Grilla de horarios */
+    .hour-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    /* Bloques de horario */
+    .hour-block {
+        width: 100px;
+        height: 50px;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    /* Colores de estado */
+    .hour-block.gris {
+        background-color: #d3d3d3; /* Gris */
+        color: black;
+        border: 1px solid #bbb;
+    }
+    .hour-block.verde {
+        background-color: #4caf50; /* Verde */
+        color: white;
+        border: 1px solid #3e8e41;
+    }
+    .hour-block.rojo {
+        background-color: #f44336; /* Rojo */
+        color: white;
+        border: 1px solid #e53935;
+    }
+    /* Hover para bloques */
+    .hour-block:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+    /* Contenedor responsivo */
+    @media (max-width: 768px) {
+        .hour-block {
+            width: 80px;
+            height: 40px;
+            font-size: 10px;
+        }
+    }
+    /* Estilo para el botón colapsado */
+    .accordion-button.collapsed {
+        color: #4CAF50;
+        font-weight: bold;
+        background-color: #f9f9f9;
+    }
+</style>

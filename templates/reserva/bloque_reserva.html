@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="col-md-4">
+    <a href="{% url 'detalle_reserva' reserva.id %}" class="card-link">
+        <div class="card shadow-lg">
+            <img src="{% if reserva.horario.cancha.imagen %}{{ reserva.horario.cancha.imagen.url }}{% else %}{% static 'images/default-cancha.jpg' %}{% endif %}" 
+                class="card-img-top" alt="Cancha {{ reserva.horario.cancha.nombre }}">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-3" style="font-weight: 900; letter-spacing: 2px; color: #4CAF50;">
+                    {{ reserva.horario.cancha.nombre }}
+                </h5>
+                <p class="card-text">
+                    <strong>Fecha reservada:</strong> {{ reserva.horario.dia|date:"M. d, Y" }}
+                </p>
+                <p class="card-text">
+                    <strong>Horario:</strong> {{ reserva.hora_reserva_inicio|time:"g:i a" }} - {{ reserva.hora_reserva_fin|time:"g:i a" }}
+                </p>
+                <p class="card-text">
+                    <strong>Fecha de reserva:</strong> {{ reserva.fecha_reserva|date:"M. d, Y" }}
+                </p>
+            </div>
+        </div>
+    </a>
+</div>

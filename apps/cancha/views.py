@@ -13,7 +13,7 @@ from .models import Cancha
 from datetime import timedelta, datetime, time
 from itertools import groupby
 from operator import attrgetter
-
+import re
 
 class CanchaViewSet(viewsets.ModelViewSet):
     serializer_class = CanchaSerializer
@@ -23,6 +23,56 @@ class CanchaViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(responsable=self.request.user)
+
+def obtener_dias_horarios(cancha):
+    horarios = Horario.objects.filter(cancha=cancha).order_by('dia', 'hora_inicio')
+    today = datetime.now().date()
+    
+    dias_horarios = []
+    
+    for dia, horarios_dia in groupby(horarios, key=attrgetter('dia')):
+        horarios_dia = list(horarios_dia)
+        horas_dia = []
+        # Generar todas las horas entre 00:00 y 23:00
+        for h in range(24):
+            hora_inicio = time(hour=h, minute=0)
+            if h == 23:  # Último bloque del día
+                hora_fin = time(hour=23, minute=59)
+            else:
+                hora_fin = (datetime.combine(today, hora_inicio) + timedelta(hours=1)).time()
+            # Buscar si la hora está dentro de algún horario creado
+            horario_encontrado = next(
+                (horario for horario in horarios_dia if horario.hora_inicio <= hora_inicio < horario.hora_fin),
+                None
+            )
+            if horario_encontrado:
+                # Verificar si está reservado
+                reservado = Reserva.objects.filter(
+                    horario=horario_encontrado,
+                    hora_reserva_inicio=hora_inicio,
+                    hora_reserva_fin=hora_fin
+                ).exists()
+                if reservado:
+                    estado = "rojo"  # Reservado
+                else:
+                    estado = "verde"  # Disponible
+            else:
+                estado = "gris"  # Sin horario
+            # Añadir bloque de hora
+            horas_dia.append({
+                "id": horario_encontrado.id if horario_encontrado else None,
+                "hora_inicio": hora_inicio.strftime('%H:%M'),
+                "hora_fin": hora_fin.strftime('%H:%M'),
+                "estado": estado,
+            })
+        # Agregar información del día
+        dias_horarios.append({
+            "dia": dia.strftime('%Y-%m-%d'),
+            "horas": horas_dia,
+            "hora_inicio": horarios_dia[0].hora_inicio.strftime('%H:%M') if horarios_dia else None,
+            "hora_fin": horarios_dia[-1].hora_fin.strftime('%H:%M') if horarios_dia else None,
+        })
+    return dias_horarios
 
 @login_required
 def detalle_cancha(request, cancha_id, cancha_slug):
@@ -133,21 +183,6 @@ def editar_cancha(request, cancha_id, cancha_slug):
 
 @login_required
 @require_POST
-def cambiar_imagen(request):
-    user = request.user
-    imagen = request.FILES.get('imagen')
-    if imagen:
-        user.imagen = imagen
-        user.save()
-        messages.success(request, 'Imagen actualizada correctamente.')
-        return redirect('perfil', user.id, user.slug)
-    else:
-        user.imagen = 'usuarios/default-avatar.jpg'
-        user.save()
-        return redirect('perfil', user.id, user.slug)
-
-@login_required
-@require_POST
 def eliminar_cancha(request, cancha_id, cancha_slug):
     cancha = get_object_or_404(Cancha, id=cancha_id, slug=cancha_slug, responsable=request.user)
     contraseña = request.POST.get('password')
@@ -157,6 +192,118 @@ def eliminar_cancha(request, cancha_id, cancha_slug):
     cancha.delete()
     messages.success(request, 'La cancha fue eliminada correctamente.')
     return redirect('inicio')
+
+@login_required
+@require_POST
+def agregar_horario(request, cancha_id, cancha_slug):
+    cancha = get_object_or_404(Cancha, id=cancha_id, slug=cancha_slug)
+    dia = request.POST.get('dia')
+    hora_inicio = request.POST.get('hora_inicio')
+    hora_fin = request.POST.get('hora_fin')
+    try:
+        ahora = datetime.now()
+        if isinstance(dia, str):
+            dia = datetime.strptime(dia, "%Y-%m-%d").date()
+        if isinstance(hora_inicio, str):
+            hora_inicio = datetime.strptime(hora_inicio, "%H:%M").time()
+        if isinstance(hora_fin, str):
+            hora_fin = datetime.strptime(hora_fin, "%H:%M").time()
+        
+        # Validar que el horario sea en una fecha y hora futuras
+        if dia < ahora.date() or (dia == ahora.date() and hora_inicio <= ahora.time()):
+            raise ValueError("El horario debe ser en una fecha y hora futuras.")
+        # Validar que hora de inicio debe ser antes de la hora de fin
+        if hora_inicio >= hora_fin:
+            raise ValueError("La hora de inicio debe ser menor que la hora de fin.")
+        # Validar que no exista un horario con el mismo dia y hora
+        if Horario.objects.filter(cancha_id=cancha_id, dia=dia).exists():
+            raise ValueError("Ya existe un horario para este día y cancha.")
+        
+        # Crear el horario
+        Horario.objects.create(
+            cancha=cancha,
+            dia=dia,
+            hora_inicio=hora_inicio,
+            hora_fin=hora_fin
+        )
+        messages.success(request, "Horario agregado exitosamente.")
+    except ValueError as e:
+        messages.error(request, str(e))
+    return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+
+@login_required
+@require_POST
+def editar_horarios_dia(request, cancha_id, cancha_slug):
+    cancha = get_object_or_404(Cancha, id=cancha_id, slug=cancha_slug, responsable=request.user)
+    dia = request.POST.get('dia')
+    hora_inicio = request.POST.get('hora_inicio')
+    hora_fin = request.POST.get('hora_fin')
+    try:
+        # Validación de existencia de horarios para el día seleccionado
+        horarios_existentes = Horario.objects.filter(cancha=cancha, dia=dia)
+        if not horarios_existentes.exists():
+            messages.error(request, f"No hay horarios existentes para el día {dia}.")
+            return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+        
+        # Validaciones de entrada
+        if not hora_inicio or not hora_fin:
+            messages.error(request, "Debe especificar una hora de inicio y una hora de fin.")
+            return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+        
+        # Validar formato de las horas
+        hora_inicio_dt = datetime.strptime(hora_inicio, "%H:%M").time()
+        hora_fin_dt = datetime.strptime(hora_fin, "%H:%M").time()
+        if hora_inicio_dt >= hora_fin_dt:
+            messages.error(request, "La hora de inicio debe ser anterior a la hora de fin.")
+            return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+        if hora_fin_dt > time(23, 59):
+            messages.error(request, "La hora de fin no puede superar las 23:59.")
+            return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+        
+        # Verificar reservas en conflicto
+        reservas_en_conflicto = []
+        for horario in horarios_existentes:
+            reservas = Reserva.objects.filter(horario=horario)
+            for reserva in reservas:
+                if reserva.hora_reserva_inicio < hora_inicio_dt or reserva.hora_reserva_fin > hora_fin_dt:
+                    reservas_en_conflicto.append(reserva)
+        
+        if reservas_en_conflicto:
+            reservas_detalle = ", ".join(
+                f"Reserva de {reserva.usuario} de {reserva.hora_reserva_inicio} a {reserva.hora_reserva_fin}" for reserva in reservas_en_conflicto
+            )
+            messages.error(
+                request, 
+                f"No se pueden modificar los horarios porque existen reservas en conflicto: {reservas_detalle}."
+            )
+            return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+        
+        # Actualizar los horarios
+        for horario in horarios_existentes:
+            horario.hora_inicio = hora_inicio_dt
+            horario.hora_fin = hora_fin_dt
+            horario.save()
+        
+        messages.success(request, f"Horarios del día {dia} actualizados exitosamente.")
+    except Exception as e:
+        messages.error(request, f"Error al editar horarios: {str(e)}")
+    return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
+
+@login_required
+@require_POST
+def eliminar_horarios_dia(request, cancha_id, cancha_slug):
+    cancha = get_object_or_404(Cancha, id=cancha_id, slug=cancha_slug, responsable=request.user)
+    dia = request.POST.get('dia')
+    try:
+        # Eliminar todos los horarios asociados al día y a la cancha seleccionada
+        horarios_eliminados = Horario.objects.filter(cancha=cancha, dia=dia).delete()
+        if horarios_eliminados[0] > 0:  # Chequea si se eliminaron registros
+            messages.success(request, f"Todos los horarios del día {dia} han sido eliminados.")
+        else:
+            messages.warning(request, f"No se encontraron horarios para el día {dia}.")
+    except Exception as e:
+        messages.error(request, f"Error al eliminar horarios: {str(e)}")
+    return redirect('detalle_cancha', cancha_id=cancha.id, cancha_slug=cancha.slug)
 
 @login_required
 def detalle_horario(request, cancha_id, cancha_slug, horario_id, hora_inicio, hora_fin):

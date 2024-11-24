@@ -9,13 +9,14 @@
                 <div class="card-body p-5">
                     <h2 class="text-center mb-4" style="color: #4CAF50; font-weight: bold;">Editar Cancha</h2>
                     <hr>
-                    <form method="POST" action="{% url 'editar_cancha' cancha.id cancha.slug %}">
+                    <form method="POST" action="{% url 'editar_cancha' cancha.id cancha.slug %}" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-4">
                             <label for="nombre" class="form-label" style="font-weight: bold; color: #F1C40F;">Nombre de la Cancha:</label>
                             <input type="text" id="nombre" name="nombre" value="{{ cancha.nombre }}" 
                                 class="form-control form-control-lg shadow-sm" maxlength="100" required>
                         </div>
+                        {% include "cancha/editar_cancha/editar_imagen.html" %}
                         <!-- Incluir el template para editar la dirección de la cancha -->
                         {% include "cancha/editar_cancha/editar_direccion.html" %}
                         <!-- Botones para guardar cambios y cancelar -->
@@ -24,9 +25,17 @@
                                 style="background-color: #2C3E50; color: #fff; font-weight: bold;">Cancelar</a>
                                 <button type="submit" class="btn px-4 py-2 shadow-sm" style="background-color: #4CAF50; color: #fff; font-weight: bold;">Guardar Cambios</button>
                         </div>
-                        <!-- Botón para eliminar cancha que abre el modal -->
-                        {% include "cancha/editar_cancha/eliminar_cancha.html" %}
                     </form>
+                    <hr>
+                    <h4 class="text-center mt-4 mb-3" style="color: #2C3E50; font-weight: bold;">Eliminar cancha</h4>
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-danger px-4 py-2 shadow-sm" 
+                                data-bs-toggle="modal" data-bs-target="#modalEliminarCancha" style="font-weight: bold;">
+                            Eliminar cancha
+                        </button>
+                    </div>
+                    <!-- Modal para eliminar cancha -->
+                    {% include "cancha/editar_cancha/eliminar_cancha.html" %}
                 </div>
             </div>
         </div>
