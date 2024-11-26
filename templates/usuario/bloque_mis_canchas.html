@@ -1,0 +1,77 @@
+{% load static %}
+
+<style>
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    a.card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style>
+
+<div class="col-md-4">
+    <a href="{% url 'detalle_cancha' cancha.id cancha.slug %}" class="card-link">
+        <div class="card shadow-lg">
+            <img src="{% if cancha.imagen %}{{ cancha.imagen.url }}{% else %}{% static 'images/default-cancha.jpg' %}{% endif %}" 
+                class="card-img-top" alt="Cancha {{ cancha.nombre }}">
+            <div class="card-body">
+                <h5 class="card-title text-center mb-3" style="font-weight: 900; letter-spacing: 2px; color: #4CAF50;">{{ cancha.nombre }}</h5>
+                <p class="card-text">
+                    <strong>Responsable:</strong> 
+                    <a href="{% url 'perfil' cancha.responsable.id cancha.responsable.slug %}" 
+                        class="text-decoration-none fw text-primary d-inline-flex align-items-center">
+                        <span class="me-1" style="color: #4CAF50;">{{ cancha.responsable }}</span>
+                        <i class="bi bi-person-circle" style="color: #4CAF50;"></i>
+                    </a>
+                </p>
+                {% with direccion=cancha.direcciones.first %}
+                    <p class="card-text">
+                        <strong>Dirección:</strong>
+                            {{ direccion.get_tipo_calle_display }} {{ direccion.nombre_calle }} 
+                            {{ direccion.numero_calle }} - {{ direccion.get_distrito_display }}
+                    </p>
+                {% endwith %}
+                <p class="card-text">
+                    <strong>Calificación:</strong>
+                    {% if cancha.calificacion %}
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= cancha.calificacion %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% elif forloop.counter == cancha.calificacion|add:0.5 %}
+                                <i class="bi bi-star-half text-warning"></i>
+                            {% else %}
+                                <i class="bi bi-star text-muted"></i>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for i in "12345" %}
+                            <i class="bi bi-star text-muted"></i>
+                        {% endfor %}
+                    {% endif %}
+                </p>
+                <p class="card-text mb-0">
+                    <strong>Disponible:</strong>
+                    {% if cancha.disponibilidad %}
+                        <span class="text-success">
+                            Sí <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                    {% else %}
+                        <span class="text-danger">
+                            No <i class="bi bi-x-circle-fill"></i>
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </a>
+</div>

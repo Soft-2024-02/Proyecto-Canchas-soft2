@@ -20,7 +20,6 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
 def inicio(request):
-    from apps.cancha.models import Cancha
     canchas = Cancha.objects.prefetch_related('direcciones').all()
     
     lista_canchas = []

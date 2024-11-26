@@ -33,6 +33,7 @@ class UsuarioManager(BaseUserManager):
         
         # Asignar el grupo "Cliente" automáticamente al crear un nuevo usuario
         cliente_group, _ = Group.objects.get_or_create(name='Cliente')
+        responsable_group, _ = Group.objects.get_or_create(name='Responsable')
         user.groups.add(cliente_group)
         
         return user
@@ -53,7 +54,9 @@ class UsuarioManager(BaseUserManager):
         
         # Asignar el grupo "Administrador" automáticamente
         admin_group, _ = Group.objects.get_or_create(name='Administrador')
+        responsable_group, _ = Group.objects.get_or_create(name='Responsable')
         user.groups.add(admin_group)
+        user.groups.add(responsable_group)
         
         return user
 
